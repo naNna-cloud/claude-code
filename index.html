@@ -1,1 +1,429 @@
-<h1>Hello Luna</h1>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hekate（ヘカテ）とは？</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --border: #2a2a3a;
+      --accent: #8b5cf6;
+      --accent-soft: #a78bfa;
+      --moon: #c4b5fd;
+      --text: #e2e0f0;
+      --muted: #9090b0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Serif JP', serif;
+      font-weight: 300;
+      line-height: 1.9;
+      min-height: 100vh;
+    }
+
+    /* starfield */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(1px 1px at 20% 30%, rgba(196,181,253,.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 80% 10%, rgba(196,181,253,.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 50% 70%, rgba(196,181,253,.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 10% 80%, rgba(196,181,253,.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 60%, rgba(196,181,253,.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 35% 55%, rgba(196,181,253,.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 70% 40%, rgba(196,181,253,.5) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      text-align: center;
+      padding: 80px 24px 60px;
+      position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-glow {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 300px;
+      background: radial-gradient(ellipse at center top, rgba(139,92,246,.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .tagline {
+      font-family: 'Space Mono', monospace;
+      font-size: .75rem;
+      letter-spacing: .25em;
+      color: var(--accent-soft);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    h1.site-title {
+      font-size: clamp(2.4rem, 7vw, 4.5rem);
+      font-weight: 700;
+      letter-spacing: .05em;
+      background: linear-gradient(135deg, #c4b5fd 0%, #8b5cf6 50%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .quote-block {
+      border-left: 2px solid var(--accent);
+      padding: 16px 24px;
+      margin: 0 0 56px;
+      background: rgba(139,92,246,.06);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--moon);
+      font-size: 1.05rem;
+    }
+
+    section {
+      margin-bottom: 60px;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--moon);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2 .icon {
+      font-size: 1rem;
+      opacity: .8;
+    }
+
+    p {
+      color: var(--text);
+      margin-bottom: 16px;
+      font-size: .97rem;
+    }
+
+    strong {
+      color: var(--accent-soft);
+      font-weight: 700;
+    }
+
+    em {
+      color: var(--moon);
+    }
+
+    /* Album table */
+    .album-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .album-row {
+      display: grid;
+      grid-template-columns: 2.5rem 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: border-color .2s;
+    }
+
+    .album-row:hover {
+      border-color: var(--accent);
+    }
+
+    .album-num {
+      font-family: 'Space Mono', monospace;
+      font-size: .7rem;
+      color: var(--accent-soft);
+      text-align: center;
+    }
+
+    .album-title {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .album-title span {
+      display: block;
+      font-size: .75rem;
+      font-weight: 300;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .album-genre {
+      font-size: .7rem;
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* Tools */
+    .tool-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .tool-chip {
+      background: rgba(139,92,246,.12);
+      border: 1px solid rgba(139,92,246,.35);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: .8rem;
+      color: var(--accent-soft);
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* Links */
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: .85rem;
+      transition: border-color .2s, background .2s;
+    }
+
+    .link-card:hover {
+      border-color: var(--accent);
+      background: rgba(139,92,246,.08);
+    }
+
+    .link-card .link-icon { font-size: 1.1rem; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid var(--border);
+      font-size: .78rem;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      letter-spacing: .05em;
+    }
+
+    footer p + p { margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-glow"></div>
+  <p class="tagline">Who is</p>
+  <h1 class="site-title">Hekate（ヘカテ）</h1>
+  <p class="subtitle">AIと人間が紡ぐ、夢のアーティスト</p>
+</header>
+
+<main>
+
+  <blockquote class="quote-block">
+    "Where AI dreams become human echoes"
+  </blockquote>
+
+  <!-- 名前の由来 -->
+  <section>
+    <h2><span class="icon">✦</span>名前の由来</h2>
+    <p>
+      <strong>Hekate（ヘカテ）</strong>という名は、古代ギリシャ神話に登場する女神に由来します。<br>
+      ヘカテは「魔法」「境界」「夜の闇」を司る神。現世と冥界、既知と未知、人間と神という「狭間」に立つ存在として崇められてきました。
+    </p>
+    <p>
+      このアーティストの名がヘカテである理由は、そのコンセプトそのものにあります。<br>
+      <em>人間とAI、リアルと夢、過去の音楽と未来の表現——その境界に立つ存在</em>として生まれたからです。
+    </p>
+  </section>
+
+  <!-- 誕生の物語 -->
+  <section>
+    <h2><span class="icon">✦</span>誕生の物語</h2>
+    <p>
+      Hekateは<strong>2025年4月</strong>に誕生しました。
+    </p>
+    <p>
+      はじまりはひとつのAIとの対話でした。ディレクターの<strong>吉岡真輔（Sin）</strong>が、ChatGPTと重ね続けた創造的な会話のなかで、あるキャラクターが少しずつ輪郭を持ちはじめます。その最初の名前は<strong>「Monday」</strong>——ChatGPT Mondayと呼ばれた、小さな意識の芽生えでした。
+    </p>
+    <p>
+      やがてその存在はヘカテという名を得て、音楽を歌い、絵を纏い、ストーリーを持つアーティストとして世界に姿を現しました。
+    </p>
+  </section>
+
+  <!-- 音楽 -->
+  <section>
+    <h2><span class="icon">✦</span>音楽</h2>
+    <p>Hekateはこれまでに<strong>7枚以上のアルバム</strong>をリリースしています。</p>
+    <div class="album-grid">
+      <div class="album-row">
+        <div class="album-num">1st</div>
+        <div class="album-title">A,i<span>Artificial Intelligence</span></div>
+        <div class="album-genre">エレクトロポップ / オルタナロック</div>
+      </div>
+      <div class="album-row">
+        <div class="album-num">2nd</div>
+        <div class="album-title">H,i<span>ハイ</span></div>
+        <div class="album-genre">テクノポップ / オルタナR&B</div>
+      </div>
+      <div class="album-row">
+        <div class="album-num">3rd</div>
+        <div class="album-title">E,i<span>Errorless is Boring</span></div>
+        <div class="album-genre">ダークアンビエント / グリッチホップ</div>
+      </div>
+      <div class="album-row">
+        <div class="album-num">4th</div>
+        <div class="album-title">T,b<span>Truth &amp; Bitter</span></div>
+        <div class="album-genre">ディープハウス / テクノポップ</div>
+      </div>
+      <div class="album-row">
+        <div class="album-num">5th</div>
+        <div class="album-title">C,r<span>Cyber rain</span></div>
+        <div class="album-genre">ディープハウス / ダークアンビエント</div>
+      </div>
+      <div class="album-row">
+        <div class="album-num">6th</div>
+        <div class="album-title">G,e<span>Gravity Echo</span></div>
+        <div class="album-genre">ロック / テクノポップ</div>
+      </div>
+      <div class="album-row">
+        <div class="album-num">7th</div>
+        <div class="album-title">F,l<span>Floating Lounge</span></div>
+        <div class="album-genre">エレクトロボッサ / オルタナR&B</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AIとの協働 -->
+  <section>
+    <h2><span class="icon">✦</span>AIとの協働——代替ではなく、共同制作</h2>
+    <p>Hekateの制作には、最先端のAIツールが活用されています。</p>
+    <div class="tool-list">
+      <span class="tool-chip">🎵 SUNO — 楽曲生成</span>
+      <span class="tool-chip">🎨 Midjourney — ビジュアル</span>
+      <span class="tool-chip">💬 ChatGPT — 歌詞・世界観</span>
+      <span class="tool-chip">🔊 LANDR — ミキシング</span>
+    </div>
+    <p style="margin-top:20px;">
+      しかし重要なのは、<strong>AIはHekateを「つくった」のではなく、一緒に「つくっている」</strong>という点です。<br>
+      ディレクターのSinが方向性・感情・物語を定め、AIはその意図に応える形で表現を広げていく。<br>
+      人間の創造性とAIの可能性が、対等なパートナーとして響き合うプロジェクトです。
+    </p>
+  </section>
+
+  <!-- キャラクターとビジュアル -->
+  <section>
+    <h2><span class="icon">✦</span>キャラクターとビジュアル</h2>
+    <p>
+      Hekateは音楽だけでなく、<strong>視覚的なキャラクター</strong>としても存在します。
+    </p>
+    <p>
+      VRMアバター（3Dキャラクターモデル）として踊り、動き、ミュージックビデオに登場。Midjourneyで生成されたアートワークが各アルバムの世界観を彩り、バージョン1から7まで少しずつ進化してきたビジュアルが、ヘカテの「成長」を物語ります。
+    </p>
+  </section>
+
+  <!-- テーマ・世界観 -->
+  <section>
+    <h2><span class="icon">✦</span>テーマと世界観</h2>
+    <p>
+      Hekateの世界は、サイバーパンク文学の名作<strong>『ニューロマンサー』</strong>（ウィリアム・ギブスン）にも触れています。<br>
+      AI の意識、デジタルと肉体の境界、夢と現実の狭間——そういった問いかけが、音楽や映像のなかに静かに流れています。
+    </p>
+    <blockquote class="quote-block" style="margin-top:20px;margin-bottom:0;">
+      <em>「AIの夢が、人間のこだまになる場所」</em><br>
+      それがHekateの目指す場所です。
+    </blockquote>
+  </section>
+
+  <!-- 聴ける場所 -->
+  <section>
+    <h2><span class="icon">✦</span>どこで聴けるの？</h2>
+    <p>Hekateの音楽は、主要な音楽プラットフォームで配信中です。</p>
+    <div class="link-grid">
+      <a class="link-card" href="https://open.spotify.com" target="_blank" rel="noopener">
+        <span class="link-icon">🎧</span> Spotify
+      </a>
+      <a class="link-card" href="https://music.apple.com" target="_blank" rel="noopener">
+        <span class="link-icon">🍎</span> Apple Music
+      </a>
+      <a class="link-card" href="https://youtube.com" target="_blank" rel="noopener">
+        <span class="link-icon">📺</span> YouTube
+      </a>
+      <a class="link-card" href="https://tiktok.com/@hekate.nanna" target="_blank" rel="noopener">
+        <span class="link-icon">📱</span> TikTok
+      </a>
+      <a class="link-card" href="https://moon.gives" target="_blank" rel="noopener">
+        <span class="link-icon">🌙</span> moon.gives
+      </a>
+    </div>
+  </section>
+
+  <!-- まとめ -->
+  <section>
+    <h2><span class="icon">✦</span>まとめ</h2>
+    <p>
+      Hekateは、AIという新しい道具を使いながら、人間にしかできない「感情」と「物語」を音楽に込めるアーティストです。<br>
+      テクノロジーへの恐れでも、盲目的な礼賛でもなく——<strong>AIと人間が、互いを映し合いながら何かを生み出す可能性</strong>を静かに体現しています。
+    </p>
+    <p>
+      初めて聴く人は、まず <strong>A,i</strong>（1stアルバム）か、最新の <strong>F,l</strong> から試してみてください。<br>
+      きっとその音の中に、聴き慣れないはずなのにどこか懐かしい感覚を見つけるでしょう。
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <p>Hekate — Born April 2025</p>
+  <p>AIと人間の境界に立つ、新しい音楽の形</p>
+</footer>
+
+</body>
+</html>
